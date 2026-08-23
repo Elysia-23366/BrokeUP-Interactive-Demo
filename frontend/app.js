@@ -1,5 +1,6 @@
 // Local split ports use :8787; public/mobile gateway deployments proxy /api on the same origin.
 const isLocalSplitDev = ["127.0.0.1", "localhost"].includes(window.location.hostname);
+const isGithubPages = window.location.hostname.endsWith(".github.io");
 const API_BASE = isLocalSplitDev ? `${window.location.protocol}//${window.location.hostname}:8787` : "";
 const SESSION_KEY = "brokeup_demo_session_v2";
 const REQUEST_TIMEOUT_MS = 1800;
@@ -304,6 +305,12 @@ async function initialize() {
   screenHost.innerHTML = loadingMarkup("正在打开 Broke UP…");
   // Loading should never block the product if an API is unavailable or slow.
   window.setTimeout(dismissLaunchScreen, LAUNCH_MIN_DURATION);
+  if (isGithubPages) {
+    session = fallbackSession();
+    ui.offlineFallback = true;
+    render();
+    return;
+  }
   const saved = localStorage.getItem(SESSION_KEY);
   try {
     if (saved) {
@@ -325,15 +332,20 @@ async function initialize() {
 
 async function resetSession(announce = true) {
   screenHost.innerHTML = loadingMarkup("正在重置合成案例…");
-  try {
-    const data = await request("/api/session/reset", { method: "POST", body: "{}" });
-    session = data.session;
-    ui.offlineFallback = false;
-    localStorage.setItem(SESSION_KEY, session.sessionId);
-  } catch {
+  if (isGithubPages) {
     session = fallbackSession();
     ui.offlineFallback = true;
-    localStorage.removeItem(SESSION_KEY);
+  } else {
+    try {
+      const data = await request("/api/session/reset", { method: "POST", body: "{}" });
+      session = data.session;
+      ui.offlineFallback = false;
+      localStorage.setItem(SESSION_KEY, session.sessionId);
+    } catch {
+      session = fallbackSession();
+      ui.offlineFallback = true;
+      localStorage.removeItem(SESSION_KEY);
+    }
   }
   Object.assign(ui, {
     screen: 0,
