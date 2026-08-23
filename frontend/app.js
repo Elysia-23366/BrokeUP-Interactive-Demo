@@ -213,6 +213,8 @@ const infoModal = document.getElementById("infoModal");
 const evidenceModal = document.getElementById("evidenceModal");
 const demoModal = document.getElementById("demoModal");
 const phaseTabs = document.getElementById("phaseTabs");
+const launchScreen = document.getElementById("launchScreen");
+const LAUNCH_MIN_DURATION = 1800;
 
 function escapeHtml(value) {
   return String(value ?? "")
@@ -283,6 +285,7 @@ function loadingMarkup(label = "正在整理这段关系…") {
 }
 
 async function initialize() {
+  const launchStartedAt = performance.now();
   renderChapterList();
   screenHost.innerHTML = loadingMarkup("正在打开 Broke UP…");
   const saved = localStorage.getItem(SESSION_KEY);
@@ -302,6 +305,13 @@ async function initialize() {
     showToast("Mock API 暂未连接，已切换为透明的本地演示兜底。");
   }
   render();
+  const remaining = Math.max(0, LAUNCH_MIN_DURATION - (performance.now() - launchStartedAt));
+  window.setTimeout(() => {
+    launchScreen.classList.add("is-leaving");
+    window.setTimeout(() => {
+      launchScreen.hidden = true;
+    }, 280);
+  }, remaining);
 }
 
 async function resetSession(announce = true) {
