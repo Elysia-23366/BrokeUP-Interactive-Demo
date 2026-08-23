@@ -175,7 +175,6 @@ function createSession() {
     extensions: 0,
     selectedSkill: "游泳",
     checkins: [],
-    simulationOptIn: true,
     companionStarted: false,
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
@@ -250,7 +249,6 @@ const server = http.createServer(async (req, res) => {
         session.currentScreen = Math.max(0, Math.min(7, body.currentScreen));
       }
       if (typeof body.consent === "boolean") session.consent = body.consent;
-      if (typeof body.simulationOptIn === "boolean") session.simulationOptIn = body.simulationOptIn;
       if (typeof body.companionStarted === "boolean") session.companionStarted = body.companionStarted;
       if (body.exProfile && typeof body.exProfile === "object") session.exProfile = { ...session.exProfile, ...body.exProfile };
       if (["voice", "qa", ""].includes(body.entryMode)) session.entryMode = body.entryMode;
@@ -388,7 +386,7 @@ const server = http.createServer(async (req, res) => {
             ? "不拨，也是一种选择。你不需要向任何人证明自己已经放下。"
             : session.closureChoice === "later"
               ? "以后再说也可以。准备好不是一项必须完成的证明。"
-              : "这是一场有限的模拟练习，不会连接周屿，也不会使用真人声音。",
+              : "你把没说完的话，留在了这一段关系回声里。",
         summary: {
           understood: "保留与联系不是同一件事，未知仍然可以是未知。",
           completed: completion[0],
