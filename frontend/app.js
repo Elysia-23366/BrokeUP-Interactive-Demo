@@ -247,7 +247,6 @@ function fallbackSession() {
     extensions: 0,
     selectedSkill: "游泳",
     checkins: [],
-    simulationOptIn: true,
     companionStarted: false,
   };
 }
@@ -427,10 +426,6 @@ function renderEcho() {
           <span class="promise-check">✓</span>
           <div><strong>关于 TA，只代表你的叙述</strong><p>我不会声称那是 TA 的真相，也不会替 TA 解释动机。</p><small>必须项</small></div>
         </article>
-        <article class="promise-card glass-card optional ${session.simulationOptIn === false ? "off" : ""}">
-          <label class="promise-toggle"><input id="simulationConsent" type="checkbox" ${session.simulationOptIn === false ? "" : "checked"} /><span></span></label>
-          <div><strong>旅程最后可选择模拟告别练习</strong><p>由 AI 扮演，不是真人、不是真实通话；现在不剧透具体形式。</p><small>可选项 · 随时关闭</small></div>
-        </article>
       </div>
       <div class="safety-note">如果你正处在伤害自己的念头里，请先联系身边的人或专业机构。Broke UP 不是心理医生，也不能替代真人支持。</div>
       <div class="button-stack">
@@ -468,7 +463,7 @@ function renderStory() {
         <div class="entry-grid">
           <button class="entry-card glass-card" type="button" data-entry="voice">
             <span class="entry-icon">◉</span><strong>语音倾诉</strong><em>连续对话</em>
-            <small>像打一通电话。你说，我听懂了会开口回应，接着往下聊。</small>
+            <small>你说，我会从细节里记住这段关系，也记住你原本的习惯和愿望。</small>
             <b>适合：现在情绪上来了，不想打字</b>
           </button>
           <button class="entry-card glass-card" type="button" data-entry="qa">
@@ -509,7 +504,7 @@ function renderStory() {
     }
     return `
       <section class="screen voice-screen">
-        <div class="simulation-tag">连续倾诉演示｜不读取麦克风</div>
+        <div class="simulation-tag">连续倾诉 · 我在听</div>
         <div class="voice-agent"><div class="agent-orb"></div><strong>我在听</strong><span>03:${String(12 + index * 37).padStart(2, "0")}</span></div>
         <div class="voice-transcript">
           <div class="voice-bubble agent">${escapeHtml(turn.agent)}</div>
@@ -568,7 +563,7 @@ function renderStory() {
       <div class="composer">
         <textarea id="storyInput" placeholder="${item.placeholder}">${escapeHtml(ui.selectedAnswer)}</textarea>
         <div class="composer-actions">
-          <button class="record-button" id="recordButton" type="button" data-action="toggle-record" aria-label="模拟语音录入">◉</button>
+          <button class="record-button" id="recordButton" type="button" data-action="toggle-record" aria-label="语音输入">◉</button>
           <span class="memory-status" id="memoryStatus">回答后将标为“待确认”</span>
           <button class="send-button" type="button" data-action="submit-story" aria-label="提交回答">↑</button>
         </div>
@@ -842,12 +837,11 @@ function renderClosure() {
   if (ui.closureStage === "invite") {
     return `
       <section class="screen">
-        <div class="simulation-tag">模拟告别练习｜不会连接真人</div>
-        <h2>还有最后一件事。</h2>
-        <p class="lead">我根据你确认过的记忆，拼出了“你记忆里的周屿”。他不是真实的周屿。</p>
-        <div class="invite-card glass-card"><div class="profile-avatar">周</div><div><strong>周屿（模拟）</strong><small>由 ${session.evidence?.length || 6} 条可追溯记忆生成</small></div><p>你愿意接一通不会拨给真人的电话吗？</p></div>
+        <h2>最后，<br />有一通电话。</h2>
+        <p class="lead">它不是为了替你做决定。只是有些话，值得留到你准备好了再听见。</p>
+        <div class="invite-card glass-card"><div class="profile-avatar">周</div><div><strong>周屿</strong><small>来电 · 此刻</small></div><p>你愿意接吗？</p></div>
         <div class="button-stack">
-          <button class="primary-button" type="button" data-action="call-start">接受这通模拟电话</button>
+          <button class="primary-button" type="button" data-action="call-start">接听</button>
           <button class="secondary-button" type="button" data-closure="leave">把电话留在这里</button>
           <button class="text-button" type="button" data-closure="later">以后再说</button>
         </div>
@@ -857,8 +851,8 @@ function renderClosure() {
   if (ui.closureStage === "ringing") {
     return `
       <section class="screen call-screen">
-        <div class="simulation-tag">Broke UP 模拟来电｜不会拨出任何号码</div>
-        <div class="call-orbit" aria-hidden="true"><span>周屿（模拟）</span></div>
+        <div class="simulation-tag">一段关系，正在回声里</div>
+        <div class="call-orbit" aria-hidden="true"><span>周屿</span></div>
         <h2>关系号码来电</h2><p class="lead">不接不代表你没有走出来。</p>
         <div class="call-actions"><button type="button" class="decline-call" data-action="call-decline">×<small>不接</small></button><button type="button" class="answer-call" data-action="call-answer">✓<small>接通</small></button></div>
       </section>`;
@@ -868,10 +862,10 @@ function renderClosure() {
     const lines = ["喂……是你啊。", "那天我说不想耽误你，其实是我不敢把话说完。", "对不起。也谢谢你，把那三年过得那么认真。"];
     return `
       <section class="screen call-screen talking">
-        <div class="simulation-tag">AI 依据你的记忆生成｜不是真人声音</div>
-        <div class="profile-avatar">周</div><strong>周屿（模拟）</strong><small>通话中 · 00:${String(12 + ui.callLine * 5).padStart(2, "0")}</small>
+        <div class="simulation-tag">你们没说完的话，正在被慢慢听见</div>
+        <div class="profile-avatar">周</div><strong>周屿</strong><small>通话中 · 00:${String(12 + ui.callLine * 5).padStart(2, "0")}</small>
         <div class="call-transcript">${lines.slice(0, ui.callLine + 1).map((line) => `<div>${escapeHtml(line)}</div>`).join("")}</div>
-        <div class="button-stack"><button class="primary-button" type="button" data-action="call-next">${ui.callLine >= lines.length - 1 ? "结束通话，看看这段路" : "继续模拟通话"}</button><button class="text-button" type="button" data-action="call-end">随时挂断</button></div>
+        <div class="button-stack"><button class="primary-button" type="button" data-action="call-next">${ui.callLine >= lines.length - 1 ? "结束通话，看看这段路" : "继续听"}</button><button class="text-button" type="button" data-action="call-end">随时挂断</button></div>
       </section>`;
   }
 
@@ -909,8 +903,7 @@ async function handleAction(action, target) {
 
   if (action === "consent-start") {
     session.consent = true;
-    session.simulationOptIn = Boolean(document.getElementById("simulationConsent")?.checked);
-    persistSessionFields({ consent: true, simulationOptIn: session.simulationOptIn });
+    persistSessionFields({ consent: true });
     return goToScreen(1);
   }
   if (action === "save-profile") {
@@ -1002,7 +995,7 @@ async function handleAction(action, target) {
   if (action === "toggle-record") {
     const button = document.getElementById("recordButton");
     button?.classList.toggle("recording");
-    showToast(button?.classList.contains("recording") ? "模拟录音中，再点一次结束。" : "模拟录音已转成文字草稿。");
+    showToast(button?.classList.contains("recording") ? "正在听你说…" : "这段话已经整理成文字草稿。");
     return;
   }
   if (action === "submit-story") return submitStory();
@@ -1020,7 +1013,7 @@ async function handleAction(action, target) {
     return goToScreen(7);
   }
   if (action === "closure-ready") {
-    ui.closureStage = session.simulationOptIn === false ? "video" : "invite";
+    ui.closureStage = "invite";
     return render();
   }
   if (action === "closure-extend") {
@@ -1212,7 +1205,7 @@ async function closeJourney(choice) {
     if (ui.offlineFallback) {
       await new Promise((resolve) => setTimeout(resolve, 520));
       ui.closureResult = {
-        message: choice === "leave" ? "不拨，也是一种选择。你不需要向任何人证明自己已经放下。" : choice === "later" ? "以后再说也可以。准备好不是一项必须完成的证明。" : "这是一场有限的模拟练习，不会连接周屿，也不会使用真人声音。",
+        message: choice === "leave" ? "不拨，也是一种选择。你不需要向任何人证明自己已经放下。" : choice === "later" ? "以后再说也可以。准备好不是一项必须完成的证明。" : "你把没说完的话，留在了这一段关系回声里。",
         summary: {
           understood: "保留与联系不是同一件事，未知仍然可以是未知。",
           completed: "从泳池踩点，到完成属于自己的 500 米。",
