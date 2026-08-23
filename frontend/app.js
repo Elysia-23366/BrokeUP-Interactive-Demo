@@ -2,6 +2,7 @@
 const isLocalSplitDev = ["127.0.0.1", "localhost"].includes(window.location.hostname);
 const API_BASE = isLocalSplitDev ? `${window.location.protocol}//${window.location.hostname}:8787` : "";
 const SESSION_KEY = "brokeup_demo_session_v2";
+const REQUEST_TIMEOUT_MS = 1800;
 
 const chapters = [
   "开始之前",
@@ -252,12 +253,19 @@ function fallbackSession() {
 }
 
 async function request(path, options = {}) {
-  const response = await fetch(`${API_BASE}${path}`, {
-    ...options,
-    headers: { "content-type": "application/json", ...(options.headers || {}) },
-  });
-  if (!response.ok) throw new Error(`HTTP ${response.status}`);
-  return response.json();
+  const controller = new AbortController();
+  const timeoutId = window.setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
+  try {
+    const response = await fetch(`${API_BASE}${path}`, {
+      ...options,
+      signal: controller.signal,
+      headers: { "content-type": "application/json", ...(options.headers || {}) },
+    });
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    return response.json();
+  } finally {
+    window.clearTimeout(timeoutId);
+  }
 }
 
 function showToast(message) {
@@ -284,10 +292,19 @@ function loadingMarkup(label = "正在整理这段关系…") {
     </section>`;
 }
 
+function dismissLaunchScreen() {
+  if (!launchScreen || launchScreen.hidden) return;
+  launchScreen.classList.add("is-leaving");
+  window.setTimeout(() => {
+    launchScreen.hidden = true;
+  }, 280);
+}
+
 async function initialize() {
-  const launchStartedAt = performance.now();
   renderChapterList();
   screenHost.innerHTML = loadingMarkup("正在打开 Broke UP…");
+  // Loading should never block the product if an API is unavailable or slow.
+  window.setTimeout(dismissLaunchScreen, LAUNCH_MIN_DURATION);
   const saved = localStorage.getItem(SESSION_KEY);
   try {
     if (saved) {
@@ -305,13 +322,6 @@ async function initialize() {
     showToast("Mock API 暂未连接，已切换为透明的本地演示兜底。");
   }
   render();
-  const remaining = Math.max(0, LAUNCH_MIN_DURATION - (performance.now() - launchStartedAt));
-  window.setTimeout(() => {
-    launchScreen.classList.add("is-leaving");
-    window.setTimeout(() => {
-      launchScreen.hidden = true;
-    }, 280);
-  }, remaining);
 }
 
 async function resetSession(announce = true) {
