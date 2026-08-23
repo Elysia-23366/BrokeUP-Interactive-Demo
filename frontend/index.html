@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta
+      name="description"
+      content="Broke UP：先把一段关系讲清楚，再把每一次思念转成现实生活的一步。"
+    />
+    <meta name="theme-color" content="#d6d2c6" />
+    <title>Broke UP｜关系善后与自我重建 Demo</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="ambient ambient-a" aria-hidden="true"></div>
+    <div class="ambient ambient-b" aria-hidden="true"></div>
+
+    <main class="demo-stage" aria-label="Broke UP 可交互产品原型">
+      <section class="phone-frame" aria-label="手机界面">
+        <div class="phone-surface" id="phoneSurface" data-phase="0">
+          <div class="dynamic-island" aria-hidden="true"></div>
+          <header class="status-bar" aria-hidden="true">
+            <span>9:41</span>
+            <span class="status-icons">▮▮▮　⌁　▰</span>
+          </header>
+
+          <nav class="app-bar" aria-label="页面导航">
+            <button class="icon-button" id="backButton" type="button" aria-label="返回上一步">‹</button>
+            <button class="brand-pill" type="button" id="brandButton" aria-label="Broke UP 首页">
+              <img src="./assets/broke-up-logo-transparent.png" alt="" />
+              <span>Broke UP</span>
+            </button>
+            <div class="top-actions">
+              <button class="mode-pill" type="button" id="modeButton" aria-label="演示信息">
+                <span class="mode-dot"></span>
+                合成演示
+              </button>
+              <button class="demo-button" type="button" id="demoButton" aria-label="打开演示控制台">•••</button>
+            </div>
+          </nav>
+
+          <div class="screen-progress" aria-hidden="true">
+            <span id="progressBar"></span>
+          </div>
+
+          <div class="screen-host" id="screenHost" aria-live="polite"></div>
+          <nav class="phase-tabs" id="phaseTabs" aria-label="第二阶段功能导航">
+            <button type="button" data-phase-tab="chat" aria-label="情感交流">
+              <span class="tab-glyph">◍</span><small>交流</small>
+            </button>
+            <button type="button" data-phase-tab="habit" aria-label="习惯与行动">
+              <span class="tab-glyph">◇</span><small>习惯</small>
+            </button>
+            <button type="button" data-phase-tab="peer" aria-label="同路人">
+              <span class="tab-glyph">◆</span><small>同路</small>
+            </button>
+            <button type="button" data-phase-tab="journal" aria-label="手账与关系记录">
+              <span class="tab-glyph">○</span><small>手账</small>
+            </button>
+          </nav>
+          <div class="toast" id="toast" role="status" aria-live="polite"></div>
+        </div>
+      </section>
+
+      <aside class="presenter-rail" aria-label="演示章节导航">
+        <div class="rail-brand">
+          <img src="./assets/broke-up-logo-transparent.png" alt="Broke UP 黑色人物剪影 Logo" />
+          <div>
+            <strong>Broke UP</strong>
+            <span>关系善后与自我重建</span>
+          </div>
+        </div>
+
+        <div class="rail-copy">
+          <p class="eyebrow">INTERACTIVE PRODUCT DEMO</p>
+          <h1>不是忘掉 TA，<br />是把自己带回来。</h1>
+          <p>从一个好问题开始，把关系讲清楚；再把被搁置的自己，慢慢带回现实生活。</p>
+        </div>
+
+        <ol class="chapter-list" id="chapterList"></ol>
+
+        <div class="rail-footer">
+          <div class="rail-status">
+            <span class="mode-dot"></span>
+            <span>林澈 / 周屿 / 南乔均为合成人物</span>
+          </div>
+          <button class="rail-reset" id="resetButton" type="button">重置演示</button>
+          <p>使用 ← → 切换章节，按 R 重置。</p>
+        </div>
+      </aside>
+    </main>
+
+    <dialog class="modal" id="infoModal" aria-labelledby="infoTitle">
+      <div class="modal-sheet compact">
+        <button class="modal-close" type="button" data-close-modal aria-label="关闭">×</button>
+        <p class="eyebrow">DEMO DISCLOSURE</p>
+        <h2 id="infoTitle">这是一个稳定的合成演示</h2>
+        <p>页面中的人物、关系轨迹、AI 分析和匹配结果均为预置数据，不代表真实用户效果，也不会调用外部模型。</p>
+        <button class="primary-button" type="button" data-close-modal>我知道了</button>
+      </div>
+    </dialog>
+
+    <dialog class="modal" id="evidenceModal" aria-labelledby="evidenceTitle">
+      <form class="modal-sheet" method="dialog" id="evidenceForm">
+        <button class="modal-close" value="cancel" aria-label="关闭">×</button>
+        <p class="eyebrow" id="evidenceType">RELATIONSHIP EVIDENCE</p>
+        <h2 id="evidenceTitle">证据详情</h2>
+        <p class="source-line" id="evidenceSource"></p>
+        <textarea id="evidenceDetail" rows="5" aria-label="证据内容"></textarea>
+        <div class="modal-actions">
+          <button class="secondary-button" type="button" id="hideEvidence">隐藏这条</button>
+          <button class="primary-button" type="button" id="saveEvidence">确认并保存</button>
+        </div>
+      </form>
+    </dialog>
+
+    <dialog class="modal" id="demoModal" aria-labelledby="demoTitle">
+      <div class="modal-sheet demo-sheet">
+        <button class="modal-close" type="button" data-close-demo aria-label="关闭">×</button>
+        <p class="eyebrow">DEMO CONTROL</p>
+        <h2 id="demoTitle">演示控制台</h2>
+        <p>快速跳到关键体验。人物、时间跃迁与结果均为合成演示。</p>
+        <div class="demo-section">
+          <strong>旅程天数</strong>
+          <div class="demo-chip-row">
+            <button type="button" data-demo-day="1">Day 1</button>
+            <button type="button" data-demo-day="4">Day 4</button>
+            <button type="button" data-demo-day="9">Day 9</button>
+            <button type="button" data-demo-day="15">Day 15</button>
+            <button type="button" data-demo-day="21">Day 21</button>
+          </div>
+        </div>
+        <div class="demo-section">
+          <strong>现实项目</strong>
+          <div class="demo-chip-row">
+            <button type="button" data-demo-skill="游泳">游泳</button>
+            <button type="button" data-demo-skill="读书">读书</button>
+            <button type="button" data-demo-skill="攀岩">攀岩</button>
+            <button type="button" data-demo-skill="滑雪">滑雪</button>
+          </div>
+        </div>
+        <button class="secondary-button" type="button" data-demo-reset>重置全部演示</button>
+      </div>
+    </dialog>
+
+    <script src="./app.js" defer></script>
+  </body>
+</html>
