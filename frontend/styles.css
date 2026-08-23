@@ -393,22 +393,12 @@ input:focus-visible {
 }
 
 .icon-button,
-.brand-pill,
-.mode-pill {
+.brand-pill {
   height: 44px;
   border: 1px solid rgba(255, 255, 255, 0.86);
   background: rgba(255, 255, 255, 0.72);
   box-shadow: 0 8px 20px rgba(63, 55, 44, 0.05);
   backdrop-filter: blur(16px);
-}
-
-@media (max-width: 1160px) and (min-width: 981px) {
-  .mode-pill {
-    width: 44px;
-    padding: 0;
-    justify-content: center;
-    font-size: 0;
-  }
 }
 
 .icon-button {
@@ -456,17 +446,6 @@ input:focus-visible {
   letter-spacing: -0.03em;
   text-overflow: ellipsis;
   white-space: nowrap;
-}
-
-.mode-pill {
-  display: flex;
-  align-items: center;
-  gap: 7px;
-  padding: 0 13px;
-  border-radius: 22px;
-  color: #635f59;
-  font-size: 11px;
-  cursor: pointer;
 }
 
 .mode-dot {
@@ -2152,16 +2131,6 @@ input:focus-visible {
     padding-right: 18px;
   }
 
-  .mode-pill {
-    width: 38px;
-    padding: 0;
-    justify-content: center;
-    font-size: 0;
-  }
-
-  .mode-pill .mode-dot {
-    display: none;
-  }
 }
 
 @media (prefers-reduced-motion: reduce) {
