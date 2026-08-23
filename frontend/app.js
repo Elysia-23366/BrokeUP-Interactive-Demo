@@ -1,7 +1,10 @@
 // Local split ports use :8787; public/mobile gateway deployments proxy /api on the same origin.
 const isLocalSplitDev = ["127.0.0.1", "localhost"].includes(window.location.hostname);
 const isGithubPages = window.location.hostname.endsWith(".github.io");
-const isStaticPreviewHost = isGithubPages || window.location.hostname.endsWith("githack.com");
+const isStaticPreviewHost =
+  isGithubPages ||
+  window.location.hostname.endsWith("githack.com") ||
+  window.location.hostname === "htmlpreview.github.io";
 const API_BASE = isLocalSplitDev ? `${window.location.protocol}//${window.location.hostname}:8787` : "";
 const SESSION_KEY = "brokeup_demo_session_v2";
 const REQUEST_TIMEOUT_MS = 1800;
