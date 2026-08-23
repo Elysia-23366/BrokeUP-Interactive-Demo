@@ -2,6 +2,8 @@
 
 双击 `start-demo.command` 即可启动。电脑会打开 `http://127.0.0.1:4173`，同一 Wi-Fi 下的手机访问启动脚本打印出来的 LAN 地址（例如 `http://192.168.1.8:4173`）。
 
+如果从 GitHub 下载后系统提示没有权限，在终端进入项目目录后执行：`chmod +x start-demo.command && ./start-demo.command`。
+
 - 前端：`frontend/`
 - 公共网关：`public-server.mjs`（把页面与 `/api` 合并到一个端口，支持公网演示）
 - Mock API：`backend/server.mjs`
