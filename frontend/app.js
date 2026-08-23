@@ -1378,7 +1378,6 @@ backButton.addEventListener("click", () => {
 });
 
 document.getElementById("brandButton").addEventListener("click", () => goToScreen(0));
-document.getElementById("modeButton").addEventListener("click", () => infoModal.showModal());
 document.getElementById("demoButton").addEventListener("click", () => demoModal.showModal());
 document.getElementById("resetButton").addEventListener("click", () => resetSession());
 document.querySelectorAll("[data-close-modal]").forEach((button) => button.addEventListener("click", () => infoModal.close()));
