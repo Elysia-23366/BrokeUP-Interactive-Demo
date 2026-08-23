@@ -1,6 +1,7 @@
 // Local split ports use :8787; public/mobile gateway deployments proxy /api on the same origin.
 const isLocalSplitDev = ["127.0.0.1", "localhost"].includes(window.location.hostname);
 const isGithubPages = window.location.hostname.endsWith(".github.io");
+const isStaticPreviewHost = isGithubPages || window.location.hostname.endsWith("githack.com");
 const API_BASE = isLocalSplitDev ? `${window.location.protocol}//${window.location.hostname}:8787` : "";
 const SESSION_KEY = "brokeup_demo_session_v2";
 const REQUEST_TIMEOUT_MS = 1800;
@@ -305,7 +306,7 @@ async function initialize() {
   screenHost.innerHTML = loadingMarkup("正在打开 Broke UP…");
   // Loading should never block the product if an API is unavailable or slow.
   window.setTimeout(dismissLaunchScreen, LAUNCH_MIN_DURATION);
-  if (isGithubPages) {
+  if (isStaticPreviewHost) {
     session = fallbackSession();
     ui.offlineFallback = true;
     render();
@@ -332,7 +333,7 @@ async function initialize() {
 
 async function resetSession(announce = true) {
   screenHost.innerHTML = loadingMarkup("正在重置合成案例…");
-  if (isGithubPages) {
+  if (isStaticPreviewHost) {
     session = fallbackSession();
     ui.offlineFallback = true;
   } else {
